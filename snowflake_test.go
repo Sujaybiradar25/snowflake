@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"reflect"
 	"testing"
+	"time"
 )
 
 //******************************************************************************
@@ -21,6 +22,23 @@ func TestNewNode(t *testing.T) {
 		t.Fatalf("no error creating NewNode, %s", err)
 	}
 
+}
+
+func TestNewNodeWithStartTime(t *testing.T) {
+	_, err := NewNodeWithStartTime(0, time.Now().Add(-1*time.Hour)) // valid node and valid past time
+	if err != nil {
+		t.Fatalf("error creating NewNode, %s", err)
+	}
+
+	_, err = NewNodeWithStartTime(1025, time.Now().Add(-1*time.Hour)) // invalid node but valid past time
+	if err == nil {
+		t.Fatalf("no error creating NewNode, %s", err)
+	}
+
+	_, err = NewNodeWithStartTime(7, time.Now().Add(10*time.Hour)) // valid node but invalid future time
+	if err == nil {
+		t.Fatalf("no error creating NewNode, %s", err)
+	}
 }
 
 // lazy check if Generate will create duplicate IDs
