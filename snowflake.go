@@ -142,6 +142,7 @@ func NewNodeWithStartTime(node int64, startTime time.Time) (*Node, error) {
 
 	}
 	startEpoch := startTime.UnixMilli()
+	Epoch = startEpoch
 	// re-calc in case custom NodeBits or StepBits were set
 	// DEPRECATED: the below block will be removed in a future release.
 	mu.Lock()

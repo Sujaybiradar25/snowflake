@@ -338,6 +338,32 @@ func TestIntBytes(t *testing.T) {
 
 }
 
+func TestID_Time(t *testing.T) {
+	node, err := NewNodeWithStartTime(1000, time.Now().Add(-1*24*2000*time.Hour))
+	if err != nil {
+		t.Fatalf("error creating NewNode, %s", err)
+	}
+
+	timeForID, err := time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+	int64Id := node.Generate().Int64()
+	snowFlakeID := ID(int64Id)
+	if timeForID.UnixMilli() > snowFlakeID.Time() { // timeForId is generated first so should be less than int64Id
+		t.Fatalf("error matching time, %s", err)
+	}
+
+	node, err = NewNodeWithStartTime(1000, time.Now().Add(-1*time.Hour))
+	if err != nil {
+		t.Fatalf("error creating NewNode, %s", err)
+	}
+
+	int64Id = node.Generate().Int64()
+	snowFlakeID = ID(int64Id)
+	if int64Id < snowFlakeID.Time() {
+		t.Fatalf("error matching time, %s", err)
+	}
+
+}
+
 //******************************************************************************
 // Marshall Test Methods
 
